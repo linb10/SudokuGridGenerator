@@ -1,0 +1,48 @@
+1. Program Overview
+
+This program generates and prints a full solved, valid 9x9 Sudokuy puzzle each time it runs. The board is different on every run because the generation process incorporates elements of .random. The program follows all rules of Sudoku, especially that every row/column/box contains the digits 1 through 9 exactly once. The output is printed to the console in a clean grid format with artificial dividers separating the nine 3x3 Sudoku boxes.
+
+2. Data Structures
+
+ a. the 2D array
+The board is stored in a 2D integer array declared as int[][] result = new int[9][9], with the first index representing the row and the second index representing the column of the grid (Eg: result[r][c] is the digit placed at row r and column c). Every method in the program contributes to this array. When initialized, the array values start at 0, representing empty cells that would all be filled during generation of values.
+
+ b. the array and/or ArrayList
+ArrayList<Integer> is used in two methods, fillBox and fillRemaining. In both cases, an ArrayList containing the integers 1 through 9 is created. A random index is generated using Math.random(), then the value at that index is placed onto the board, and finally that value is removed from the list so it cannot be picked again. Doing this guarantees that each digit is used exactly once per box, and introduces randomness in both the individual diagonal boxes and remaining solver.
+
+3. Algorithm Design
+
+The program generates a solved board in two stages. 
+
+Stage 1: FIll three diagonal boxes first (Top left, center, bottom right). These three boxes share no rows or columns with each other, which means that they can be filled randomly individually without conflicting. Each box receives a random permutation of 1 through 9 using the Arraylist removal technique.
+
+Stage 2: Fill the remaining 54 empty cells using recursion. The fillRemanining method visits every cell from left to right, then top to bottom. If a cell was already filled during Stage 1, the method skips it and continues with recursion. For each empty cell, a randomized ArrayList of digits 1-9 is built and each digit is placed in a random order. Before placing a digit, isValid checks the row, column, and box of the cell on the grid for conflicts. If a valid digit is found, it is placed and the recursion method continues to the next cell. If no digit is found to work, the cell’s value is set back to 0 and the method returns false to try the next digit in the ArrayList. This process guarantees that a correct solution can be found with Sudoku rules.
+4. Methods
+
+run()
+This serves as the “main method” of the program. It calls all the methods required for the program to complete one full instance of Sudoku Grid.
+
+fillBoxes()
+Calls fillBox three times, once for each diagonal 3x3 box in step 1 of the algorithm design/
+
+fillBoxes(int row, int col)
+Fills a single 3x3 box starting at the given top-left corner. Creates an ArrayList of 1-9 and places each digit randomly by picking and removing a random index on each iteration.
+
+fillRemaining(int row, int col)
+Uses recursion to fill all remaining cells. Skips pre-filled cells, puts digits in a random error to be tried, and continuously resets a cell to 0 when a tested digit is conflicting with the rest of the grid.
+
+isValid(int row, int col, int num)
+Returns true if placing num at (row, col) does not violate any Sudoku rule. Checks the entire row, the entire column, and the 3x3 box containing the cell.
+
+printBoard()
+Loops through the result array and prints the board to the console with artificial divider lines between every third row and column to clearly mark the nine 3x3 boxes.
+
+5. Testing Plan
+
+
+I tested the program by running it multiple times and verifying the output manually. First I read each row and column of the printed grid after running the program to confirm that no digit appeared twice or more in each row or column. Then I manually checked all 9 3x3 boxes to confirm that each box contained all integers 1 to 9 for one time each. Finally, I ran the program multiple times and scanned the Sudoku grids to ensure that every board was unique and randomized by my process.
+
+
+6. Challenges and Solutions
+One challenge I had during this project was making the Sudoku generator completely random. My first version of fillRemaning used a for loop from 1 to 9, which meant that the solver always tried digits in the same order. This made the non-diagonal cells pre-determined even though the values in the diagonal boxes were random. I fixed this by replacing the for loop with an ArrayList of 1-9 and using Math.random() to select and remove digits in random order. This made the entire board random for each unique program run.
+
